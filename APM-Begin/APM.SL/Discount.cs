@@ -1,25 +1,38 @@
-﻿using System;
+﻿using APM.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace APM.SL
 {
-  public class Discount
-  {
-    public int DiscountId { get; private set; }
-    public string DiscountName { get; set; } = "";
-
-    public decimal? PercentOff { get; set; }
-
-    // ... Discount details
-
-    public Discount? FindDiscount(List<Discount>? discounts, string discountName)
+    public class Discount
     {
-      if (discounts is null) return null;
+        public int DiscountId { get; private set; }
+        public string DiscountName { get; set; } = "";
 
-      var foundDiscount = discounts.Find(d => d.DiscountName == discountName);
+        public decimal? PercentOff { get; set; }
 
-      return foundDiscount;
+        // ... Discount details
+
+        public Discount? FindDiscount(List<Discount>? discounts, string discountName)
+        {
+            if (discounts is null) return null;
+
+            var foundDiscount = discounts.Find(d => d.DiscountName == discountName);
+
+            return foundDiscount;
+        }
+
+        public Discount FindDiscountWithException(List<Discount>? discounts, string discountName)
+        {
+            if (discounts is null)
+                throw new ArgumentException("No discounts found");
+
+            var foundDiscount = discounts.Find(d => d.DiscountName == discountName);
+
+            if (foundDiscount is null)
+                throw new DiscountNotFoundException("Discount not found");
+
+            return foundDiscount;
+        }
     }
-
-  }
 }
